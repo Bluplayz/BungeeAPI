@@ -331,6 +331,16 @@ public class BungeeAPI extends PluginBase {
                     VerifyPacket verifyPacket = (VerifyPacket) packet;
                     if ( verifyPacket.isSuccess() ) {
                         verified = true;
+
+                        // Sync data with proxy
+                        PEServerDataPacket peServerDataPacket = new PEServerDataPacket();
+                        peServerDataPacket.setServername( getServername() );
+
+                        for ( Player player : BungeeAPI.this.getServer().getOnlinePlayers().values() ) {
+                            peServerDataPacket.getPlayers().add( player.getName() );
+                        }
+
+                        BungeeAPI.this.getPacketHandler().sendPacket( peServerDataPacket );
                     } else {
                         getServer().getLogger().info( "§cInvalid Connection Data... Check your IP, Port and Servername and restarts your server then" );
                         getServer().getLogger().info( "§cPlugin will be disabled" );
@@ -356,8 +366,6 @@ public class BungeeAPI extends PluginBase {
                     }
 
                     player.transfer( new InetSocketAddress( playerTransferPacket.getHost(), playerTransferPacket.getPort() ) );
-                    playerTransferPacket.setSuccess( true );
-                    sendPacket( playerTransferPacket, channel );
                     return;
                 }
             }
@@ -408,17 +416,6 @@ public class BungeeAPI extends PluginBase {
 
                     BungeeAPI.this.getPacketHandler().sendPacket( verifyPacket );
                 }
-
-                /*
-                PEServerDataPacket peServerDataPacket = new PEServerDataPacket();
-                peServerDataPacket.setServername( getServername() );
-
-                for ( Player player : BungeeAPI.this.getServer().getOnlinePlayers().values() ) {
-                    //peServerDataPacket.getPlayers().add( player.getName() );
-                }
-
-                BungeeAPI.this.getPacketHandler().sendPacket( peServerDataPacket );
-                */
             }
         }.runTaskTimer( this, 0, 20 );
     }

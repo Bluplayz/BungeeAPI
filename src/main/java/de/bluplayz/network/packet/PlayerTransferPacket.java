@@ -21,10 +21,6 @@ public class PlayerTransferPacket extends Packet {
     @Getter
     private int port = 19133;
 
-    @Setter
-    @Getter
-    private boolean success = false;
-
     @Override
     public void read( ByteBuf byteBuf ) throws Exception {
         int length;
@@ -39,9 +35,6 @@ public class PlayerTransferPacket extends Packet {
 
         // Port
         setPort( byteBuf.readInt() );
-
-        // Success
-        setSuccess( byteBuf.readBoolean() );
     }
 
     @Override
@@ -56,8 +49,5 @@ public class PlayerTransferPacket extends Packet {
 
         // Port
         byteBuf.writeInt( getPort() );
-
-        // Success
-        byteBuf.writeBoolean( isSuccess() );
     }
 }

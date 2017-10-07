@@ -67,7 +67,7 @@ public class ServerTransferCommand extends Command {
                         return;
                     }
 
-                    LocaleAPI.sendTranslatedMessage( sender, "command_server_transfering", targetServer.getName() );
+                    LocaleAPI.sendTranslatedMessage( target, "command_server_transfering", targetServer.getName() );
                     target.transfer( new InetSocketAddress( targetServer.getHost(), targetServer.getPort() ) );
                 }
             } );
@@ -108,7 +108,7 @@ public class ServerTransferCommand extends Command {
                     return;
                 }
 
-                LocaleAPI.sendTranslatedMessage( sender, "command_server_transfering", targetServer.getName() );
+                LocaleAPI.sendTranslatedMessage( player, "command_server_transfering", targetServer.getName() );
                 player.transfer( new InetSocketAddress( targetServer.getHost(), targetServer.getPort() ) );
             }
         } );
