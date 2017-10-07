@@ -1,0 +1,16 @@
+# Language
+language:
+  console: de_DE
+  fallback: en_EN
+
+# MySQL connection data
+data:
+  mysql:
+    host: localhost
+    port: 3306
+    username: root
+    database: bungeepe
+    password: ''
+  netty:
+    host: localhost
+    port: 19132
