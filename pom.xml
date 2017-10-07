@@ -88,7 +88,7 @@
         <dependency>
             <groupId>com.github.Bluplayz</groupId>
             <artifactId>LocaleManager</artifactId>
-            <version>001e604c9ef59ae65ded030d40095da7560dbbdf</version>
+            <version>ec70013c5675d7811c255201203ea2af12231c56</version>
         </dependency>
     </dependencies>
 </project>
