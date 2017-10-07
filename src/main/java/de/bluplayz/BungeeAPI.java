@@ -21,7 +21,12 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.Getter;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.HashMap;
 
 public class BungeeAPI extends PluginBase {
@@ -68,6 +73,9 @@ public class BungeeAPI extends PluginBase {
         // Loading start
         LocaleAPI.log( "console_loading_message_start", this.getName(), getDescription().getVersion() );
 
+        // Check for update
+        this.checkForUpdate();
+
         // Initialize DataHandler
         this.initData();
 
@@ -95,15 +103,107 @@ public class BungeeAPI extends PluginBase {
     }
 
     /**
+     * check for update
+     */
+    private void checkForUpdate() {
+        try {
+            LocaleAPI.log( "updater_check_message" );
+            String version = "error";
+            String updateMessage = "update message was not found";
+
+            URL url = new URL( "https://raw.githubusercontent.com/Bluplayz/" + getClass().getSimpleName() + "/master/src/main/resources/plugin.yml" );
+            URLConnection connection = url.openConnection();
+
+            BufferedReader in = new BufferedReader( new InputStreamReader( connection.getInputStream() ) );
+            String line;
+            while ( ( line = in.readLine() ) != null ) {
+                if ( line.startsWith( "version: " ) ) {
+                    version = line.substring( 9 );
+                    break;
+                }
+            }
+
+            in.close();
+
+            url = new URL( "https://raw.githubusercontent.com/Bluplayz/" + getClass().getSimpleName() + "/master/UpdateNotes.yml" );
+            connection = url.openConnection();
+
+            in = new BufferedReader( new InputStreamReader( connection.getInputStream() ) );
+            while ( ( line = in.readLine() ) != null ) {
+                if ( line.startsWith( version + ": " ) ) {
+                    updateMessage = line.substring( version.length() + 2 );
+                    break;
+                }
+            }
+
+            in.close();
+
+            if ( !version.equalsIgnoreCase( getDescription().getVersion() ) ) {
+                LocaleAPI.log( "updater_new_version_available", version, updateMessage );
+            } else {
+                LocaleAPI.log( "updater_already_up_to_date" );
+            }
+        } catch ( IOException e ) {
+            e.printStackTrace();
+        }
+
+        if ( getConfig().getBoolean( "autoupdater.activated" ) ) {
+            new NukkitRunnable() {
+                @Override
+                public void run() {
+                    checkForUpdate();
+                }
+            }.runTaskLater( this, getConfig().getInt( "autoupdater.checkForUpdate" ) * 20 );
+        }
+    }
+
+    /**
      * init config files
      */
     private void initConfig() {
-        // Save default config
-        this.saveDefaultConfig();
+        this.getConfig().reload();
+
+        boolean edited = false;
+
+        // LANGUAGE
+        if ( !this.getConfig().exists( "language.console" ) ) {
+            this.getConfig().set( "language.console", "de_DE" );
+            edited = true;
+        }
+        if ( !this.getConfig().exists( "language.fallback" ) ) {
+            this.getConfig().set( "language.fallback", "en_EN" );
+            edited = true;
+        }
+
+        // UPDATER
+        if ( !this.getConfig().exists( "autoupdater" ) ) {
+            this.getConfig().set( "autoupdater.activated", true );
+            this.getConfig().set( "autoupdater.checkForUpdate", 30 * 60 );
+            edited = true;
+        }
+
+        // DATA
+        if ( !this.getConfig().exists( "data.mysql" ) ) {
+            this.getConfig().set( "data.mysql.host", "localhost" );
+            this.getConfig().set( "data.mysql.port", 3306 );
+            this.getConfig().set( "data.mysql.username", "root" );
+            this.getConfig().set( "data.mysql.database", "bungeepe" );
+            this.getConfig().set( "data.mysql.password", "" );
+            edited = true;
+        }
+        if ( !this.getConfig().exists( "data.proxy.address" ) ) {
+            this.getConfig().set( "data.proxy.address", "localhost:19132" );
+            edited = true;
+        }
+
+        if ( edited ) {
+            this.getConfig().save();
+            this.getConfig().reload();
+        }
 
         // Init some data from config
-        BungeeAPI.HOST = this.getConfig().getString( "data.netty.host" );
-        BungeeAPI.PORT = this.getConfig().getInt( "data.netty.port" );
+        BungeeAPI.HOST = this.getConfig().getString( "data.proxy.address" ).split( ":" )[0];
+        BungeeAPI.PORT = Integer.valueOf( this.getConfig().getString( "data.proxy.address" ).split( ":" )[1] );
     }
 
     /**
@@ -144,6 +244,15 @@ public class BungeeAPI extends PluginBase {
 
         translations.clear();
         translations.put( "prefix", "§7[§3BungeePE§7]§r" );
+        translations.put( "updater_check_message", "{PREFIX} §aSuche nach Updates..." );
+        translations.put( "updater_already_up_to_date", "{PREFIX} §aDu hast bereits die neuste Version!" );
+        translations.put( "updater_new_version_available", "{PREFIX}\n" +
+                "{PREFIX} §aEine neue Version ist verfuegbar! \n" +
+                "{PREFIX} §aVersion§7: §b{0} \n" +
+                "{PREFIX} §aUpdates§7: §b{1} \n" +
+                "{PREFIX} \n" +
+                "{PREFIX} §aDen Downloadlink gibt es hier: §bhttps://github.com/Bluplayz/BungeePE" +
+                "\n{PREFIX}" );
         translations.put( "console_loading_message_start", "{PREFIX} §a{0} v{1} wird geladen..." );
         translations.put( "console_loading_message_finish", "{PREFIX} §a{0} v{1} wurde erfolgreich geladen!" );
         translations.put( "console_language_set_success", "{PREFIX} §7Die Sprache der Konsole ist §bDeutsch§7." );
@@ -168,6 +277,15 @@ public class BungeeAPI extends PluginBase {
 
         translations.clear();
         translations.put( "prefix", "§7[§3BungeePE§7]§r" );
+        translations.put( "updater_check_message", "{PREFIX} §aChecking for update..." );
+        translations.put( "updater_already_up_to_date", "{PREFIX} §aYou already have the newest Version!" );
+        translations.put( "updater_new_version_available", "{PREFIX}\n" +
+                "{PREFIX} §aA new Version is Available! \n" +
+                "{PREFIX} §aVersion§7: §b{0} \n" +
+                "{PREFIX} §aUpdates§7: §b{1} \n" +
+                "{PREFIX} \n" +
+                "{PREFIX} §aYou can download it here: §bhttps://github.com/Bluplayz/BungeePE" +
+                "\n{PREFIX}" );
         translations.put( "console_loading_message_start", "{PREFIX} §aLoading {0} v{1}..." );
         translations.put( "console_loading_message_finish", "{PREFIX} §aSuccessfully loaded {0} v{1}!" );
         translations.put( "console_language_set_success", "{PREFIX} §7The Language of the Console is §bEnglish§7." );
@@ -213,6 +331,19 @@ public class BungeeAPI extends PluginBase {
                     VerifyPacket verifyPacket = (VerifyPacket) packet;
                     if ( verifyPacket.isSuccess() ) {
                         verified = true;
+                    } else {
+                        getServer().getLogger().info( "§cInvalid Connection Data... Check your IP, Port and Servername and restarts your server then" );
+                        getServer().getLogger().info( "§cPlugin will be disabled" );
+                        getNettyHandler().getNettyClient().disconnect();
+                        getNettyHandler().unregisterAllPacketHandler();
+                        getNettyHandler().unregisterAllConnectionListener();
+
+                        new NukkitRunnable() {
+                            @Override
+                            public void run() {
+                                getServer().getPluginManager().disablePlugin( BungeeAPI.getInstance() );
+                            }
+                        }.runTaskLater( BungeeAPI.this, 20 );
                     }
                     return;
                 }
