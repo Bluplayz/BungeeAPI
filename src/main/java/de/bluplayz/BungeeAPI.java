@@ -251,8 +251,8 @@ public class BungeeAPI extends PluginBase {
                 "{PREFIX} §aVersion§7: §b{0} \n" +
                 "{PREFIX} §aUpdates§7: §b{1} \n" +
                 "{PREFIX} \n" +
-                "{PREFIX} §aDen Downloadlink gibt es hier: §b{2}" +
-                "\n{PREFIX}" );
+                "{PREFIX} §aDen Downloadlink gibt es hier: §b{2}\n" +
+                "{PREFIX}" );
         translations.put( "console_loading_message_start", "{PREFIX} §a{0} v{1} wird geladen..." );
         translations.put( "console_loading_message_finish", "{PREFIX} §a{0} v{1} wurde erfolgreich geladen!" );
         translations.put( "console_language_set_success", "{PREFIX} §7Die Sprache der Konsole ist §bDeutsch§7." );
@@ -284,8 +284,8 @@ public class BungeeAPI extends PluginBase {
                 "{PREFIX} §aVersion§7: §b{0} \n" +
                 "{PREFIX} §aUpdates§7: §b{1} \n" +
                 "{PREFIX} \n" +
-                "{PREFIX} §aYou can download it here: §b{2}" +
-                "\n{PREFIX}" );
+                "{PREFIX} §aYou can download it here: §b{2}\n" +
+                "{PREFIX}" );
         translations.put( "console_loading_message_start", "{PREFIX} §aLoading {0} v{1}..." );
         translations.put( "console_loading_message_finish", "{PREFIX} §aSuccessfully loaded {0} v{1}!" );
         translations.put( "console_language_set_success", "{PREFIX} §7The Language of the Console is §bEnglish§7." );
