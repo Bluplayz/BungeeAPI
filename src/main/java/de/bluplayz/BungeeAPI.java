@@ -27,7 +27,7 @@ import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class BungeeAPI extends PluginBase {
     public static int PORT = 19080;
@@ -234,7 +234,7 @@ public class BungeeAPI extends PluginBase {
      * init locales with default translations
      */
     private void initLocales() {
-        HashMap<String, String> translations = new HashMap<>();
+        LinkedHashMap<String, String> translations = new LinkedHashMap<>();
 
         // Initialize LocaleManager
         this.localeManager = new LocaleManager( getDataFolder() + "/locales" );
@@ -246,12 +246,12 @@ public class BungeeAPI extends PluginBase {
         translations.put( "prefix", "§7[§3BungeePE§7]§r" );
         translations.put( "updater_check_message", "{PREFIX} §aSuche nach Updates..." );
         translations.put( "updater_already_up_to_date", "{PREFIX} §aDu hast bereits die neuste Version!" );
-        translations.put( "updater_new_version_available", "{PREFIX}\n" +
-                "{PREFIX} §aEine neue Version ist verfuegbar! \n" +
-                "{PREFIX} §aVersion§7: §b{0} \n" +
-                "{PREFIX} §aUpdates§7: §b{1} \n" +
-                "{PREFIX} \n" +
-                "{PREFIX} §aDen Downloadlink gibt es hier: §b{2}\n" +
+        translations.put( "updater_new_version_available", "{PREFIX} {NEXT_LINE}" +
+                "{PREFIX} §aEine neue Version ist verfuegbar! {NEXT_LINE}" +
+                "{PREFIX} §aVersion§7: §b{0} {NEXT_LINE}" +
+                "{PREFIX} §aUpdates§7: §b{1} {NEXT_LINE}" +
+                "{PREFIX} {NEXT_LINE}" +
+                "{PREFIX} §aDen Downloadlink gibt es hier: §b{2}{NEXT_LINE}" +
                 "{PREFIX}" );
         translations.put( "console_loading_message_start", "{PREFIX} §a{0} v{1} wird geladen..." );
         translations.put( "console_loading_message_finish", "{PREFIX} §a{0} v{1} wurde erfolgreich geladen!" );
@@ -279,12 +279,12 @@ public class BungeeAPI extends PluginBase {
         translations.put( "prefix", "§7[§3BungeePE§7]§r" );
         translations.put( "updater_check_message", "{PREFIX} §aChecking for update..." );
         translations.put( "updater_already_up_to_date", "{PREFIX} §aYou already have the newest Version!" );
-        translations.put( "updater_new_version_available", "{PREFIX}\n" +
-                "{PREFIX} §aA new Version is Available! \n" +
-                "{PREFIX} §aVersion§7: §b{0} \n" +
-                "{PREFIX} §aUpdates§7: §b{1} \n" +
-                "{PREFIX} \n" +
-                "{PREFIX} §aYou can download it here: §b{2}\n" +
+        translations.put( "updater_new_version_available", "{PREFIX}{NEXT_LINE}" +
+                "{PREFIX} §aA new Version is Available! {NEXT_LINE}" +
+                "{PREFIX} §aVersion§7: §b{0} {NEXT_LINE}" +
+                "{PREFIX} §aUpdates§7: §b{1} {NEXT_LINE}" +
+                "{PREFIX} {NEXT_LINE}" +
+                "{PREFIX} §aYou can download it here: §b{2}{NEXT_LINE}" +
                 "{PREFIX}" );
         translations.put( "console_loading_message_start", "{PREFIX} §aLoading {0} v{1}..." );
         translations.put( "console_loading_message_finish", "{PREFIX} §aSuccessfully loaded {0} v{1}!" );
