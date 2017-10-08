@@ -20,8 +20,10 @@ import de.bluplayz.networkhandler.netty.packet.defaultpackets.SetNamePacket;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.Getter;
+import org.apache.commons.io.FileUtils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
@@ -100,6 +102,18 @@ public class BungeeAPI extends PluginBase {
         if ( this.getMySQL() != null ) {
             //getMySQL().disconnect();
         }
+
+        File downloadFile = new File( getServer().getDataPath() + "/plugins/download_BungeeAPI.jar" );
+        File pluginFile = new File( getServer().getDataPath() + "/plugins/BungeeAPI.jar" );
+
+        if ( downloadFile.exists() ) {
+            try {
+                FileUtils.copyFile( downloadFile, pluginFile );
+                FileUtils.forceDelete( downloadFile );
+            } catch ( IOException e ) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -140,6 +154,11 @@ public class BungeeAPI extends PluginBase {
 
             if ( !version.equalsIgnoreCase( getDescription().getVersion() ) ) {
                 LocaleAPI.log( "updater_new_version_available", version, updateMessage, "https://github.com/Bluplayz/BungeeAPI" );
+                LocaleAPI.log( "updater_update_started" );
+                File downloadFile = new File( getServer().getDataPath() + "/plugins/download_BungeeAPI.jar" );
+                FileUtils.copyURLToFile( new URL( "https://github.com/Bluplayz/BungeeAPI/raw/master/out/BungeeAPI.jar" ), downloadFile );
+                LocaleAPI.log( "updater_update_finished" );
+                getServer().shutdown();
             } else {
                 LocaleAPI.log( "updater_already_up_to_date" );
             }
@@ -245,6 +264,8 @@ public class BungeeAPI extends PluginBase {
         translations.clear();
         translations.put( "prefix", "§7[§3BungeePE§7]§r" );
         translations.put( "updater_check_message", "{PREFIX} §aSuche nach Updates..." );
+        translations.put( "updater_update_started", "{PREFIX} §aDas Update wird heruntergeladen..." );
+        translations.put( "updater_update_finished", "{PREFIX} §aDas Update wurde erfolgreich heruntergeladen. Der Server restartet nun!" );
         translations.put( "updater_already_up_to_date", "{PREFIX} §aDu hast bereits die neuste Version!" );
         translations.put( "updater_new_version_available", "{PREFIX} {NEXT_LINE}" +
                 "{PREFIX} §aEine neue Version ist verfuegbar! {NEXT_LINE}" +
@@ -278,6 +299,8 @@ public class BungeeAPI extends PluginBase {
         translations.clear();
         translations.put( "prefix", "§7[§3BungeePE§7]§r" );
         translations.put( "updater_check_message", "{PREFIX} §aChecking for update..." );
+        translations.put( "updater_update_started", "{PREFIX} §aThe Update will be downloaded..." );
+        translations.put( "updater_update_finished", "{PREFIX} §aThe Update was successfully downloaded. The Server restarts now!" );
         translations.put( "updater_already_up_to_date", "{PREFIX} §aYou already have the newest Version!" );
         translations.put( "updater_new_version_available", "{PREFIX}{NEXT_LINE}" +
                 "{PREFIX} §aA new Version is Available! {NEXT_LINE}" +

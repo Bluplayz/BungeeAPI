@@ -20,10 +20,17 @@
                         <goals>
                             <goal>shade</goal>
                         </goals>
+                        <!--
                         <configuration>
                             <outputFile>D:/Programmieren/Minecraft/TestServer/Nukkit TestServer/Nukkit Server 1/plugins/BungeeAPI.jar</outputFile>
                             <finalName>BungeeAPI</finalName>
                             <outputDirectory>D:/Programmieren/Minecraft/TestServer/Nukkit TestServer/Nukkit Server 1/plugins/</outputDirectory>
+                        </configuration>
+                        -->
+                        <configuration>
+                            <outputFile>${project.basedir}/out/BungeeAPI.jar</outputFile>
+                            <finalName>BungeeAPI</finalName>
+                            <outputDirectory>${project.basedir}/out/</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>

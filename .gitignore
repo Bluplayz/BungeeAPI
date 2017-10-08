@@ -17,7 +17,6 @@ build.xml
 .*.sw[a-p]
 
 # various other potential build files
-out/
 build/
 bin/
 dist/
